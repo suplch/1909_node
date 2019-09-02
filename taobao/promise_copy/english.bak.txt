@@ -1,0 +1,7 @@
+Node.js is similar in design to, and influenced by, systems like Ruby's Event Machine or Python's Twisted.
+Node.js takes the event model a bit further. It presents an event loop as a runtime construct instead of as a library.
+In other systems there is always a blocking call to start the event-loop.
+Typically behavior is defined through callbacks at the beginning of a script and at the end starts a server through a blocking call like EventMachine::run().
+In Node.js there is no such start-the-event-loop call.
+Node.js simply enters the event loop after executing the input script. Node.js exits the event loop when there are no more callbacks to perform.
+This behavior is like browser JavaScript — the event loop is hidden from the user.
