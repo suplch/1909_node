@@ -2,15 +2,16 @@ const path = require('path');
 // 导入express第三方模块
 const express = require('express');
 
-
-
 // 调用express 函数 返回 app对象, app表示一个网站应用程序
 const app = express();
 
 // 映入 body 解析器, 用来 解析 浏览器 post 提交过来的 json 数据
-const bodyParser = require('body-parser');
-// 执行 bodyparser 的 json 中间件 处理函数
-app.use(bodyParser.json());
+// const bodyParser = require('body-parser');
+// // 执行 bodyparser 的 json 中间件 处理函数
+// app.use(bodyParser.json());
+
+const myBodyParser = require('./body-parser/body-parser');
+app.use(myBodyParser.json());
 
 // app.use 表示使用一个中间件
 // req 表示请求对象, res 表示响应对象,  next是一个函数, 调用它, 可以将任务传递给下一个中间件
@@ -32,7 +33,10 @@ app.use(function (req, res, next) {
 
 // app.use  表示使用一个中间件
 // express.static 设置一个网站的静态资源
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
+
+const mystatic = require('./my-static/my-static');
+app.use(mystatic.static(path.join(__dirname, 'public')));
 
 app.get('/login.html', function (req, res) {
     res.send("<html><body><input> <button>登录</button></body></html>")
