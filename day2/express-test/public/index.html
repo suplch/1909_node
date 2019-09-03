@@ -1,0 +1,45 @@
+<html>
+<head>
+    <script src="./aaa.js"></script>
+    <link href="style.css" rel="stylesheet" />
+    <script src="./jquery.js"></script>
+    <script src="axios.js"></script>
+</head>
+<body><p style='color: red;'>Hello 世界!!!!!</p>
+
+    <script>
+        $(function () {
+            alert("jquery");
+        })
+
+        function getuserinfo() {
+            // $.get("/get_userinfo",function(data,status){
+            //     console.log(data);
+            // });
+
+            axios.get("/get_userinfo").then(function (result) {
+                console.log(result.data);
+            })
+        }
+
+        function commit() {
+            axios.post('/commit_userinfo', {
+                name: '张三',
+                age: 18,
+                sex: '男'
+            }).then(function (result) {
+                console.log(result.data);
+            });
+        }
+    </script>
+
+    <img src="./imgs/liudehua.jpg" />
+<img src="./imgs/liuruoying.jpg" />
+<img src="./imgs/wanglihong.jpg" />
+
+    <button onclick="getuserinfo()">获取用户信息</button>
+<hr/>
+
+    <button onclick="commit()">提交用户信息</button>
+</body>
+</html>
