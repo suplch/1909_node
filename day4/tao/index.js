@@ -52,25 +52,11 @@ app.get('/goods/get_goods_list', async function (req, res) {
 
 app.post('/goods/delete_goods', async function (req, res) {
     try {
-
-        console.log(req.cookies.token);
-
-        jwt.verify(req.cookies.token, 'abcdef', async function (err, user) {
-            if (err) {
-                res.send({
-                    success: false,
-                    msg: '您无权限删除'
-                });
-                return;
-            }
-
-            let ret = await taodb.deleteGoods(req.body.good_id);
-            res.send({
-                success: ret.ok,
-                msg: ret.msg
-            })
-        });
-
+        let ret = await taodb.deleteGoods(req.body.good_id);
+        res.send({
+            success: ret.ok,
+            msg: ret.msg
+        })
     } catch (err) {
         res.send({
             success: false,
@@ -81,25 +67,11 @@ app.post('/goods/delete_goods', async function (req, res) {
 
 app.post('/goods/publish_goods', async function (req, res) {
 
-    console.log(req.body);
+    let ret = await taodb.addGoods(req.body);
 
-    jwt.verify(req.cookies.token, 'abcdef', async function (err, user) {
-        if (err) {
-            res.send({
-                success: false,
-                msg: '您无权限发布商品'
-            });
-            return;
-        }
-
-        let ret = await taodb.addGoods(req.body);
-
-        res.send({
-            success: ret.ok
-        })
-    });
-
-
+    res.send({
+        success: ret.ok
+    })
 
 });
 
