@@ -24,7 +24,7 @@
             good_id: good_id
         }).then(function (result) {
             if (result.data.success) {
-                location.reload();
+                //location.reload();
             } else {
                 alert('删除失败: ' + result.data.msg);
             }
@@ -45,6 +45,7 @@
                 <td>${item.count}</td>
                 <td>
                     <button onclick="deleteGoods('${item._id}')">删除</button>
+                    <button>修改</button>
                 </td>
             `;
             tbody.appendChild(tr);

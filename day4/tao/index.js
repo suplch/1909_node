@@ -1,23 +1,76 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser'); // npm install cookie-parser --save
 const crypto = require('crypto'); // 加密模块
 const path = require('path');
+const jwt = require('jsonwebtoken');
+
 const taodb = require('./taodb');
 const app = express();
-app.use(bodyParser.json());
+
+app.use(cookieParser());  // 启用 cookie 解析 中间件
+
 app.use(express.static(path.join(__dirname, 'public')));
+
+const whitelist = [
+    '/goods/get_goods_list',
+    '/auth/register',
+    '/auth/login'
+];
+
+app.use(function (req, res, next) {
+
+    if (whitelist.indexOf(req.url) !== -1) { // 如果在白名单里的 服务 可以随意访问 不需要tokne 验证
+        next();
+    } else {
+        jwt.verify(req.cookies.token, 'abcdef', async function (err, user) {
+            if (err) {
+                res.send({
+                    success: false,
+                    msg: '您无权限操作'
+                });
+                return;
+            }
+
+            next();
+        });
+    }
+});
+
+
+app.use(bodyParser.json());
+
+
+
 app.get('/goods/get_goods_list', async function (req, res) {
+
+    // console.log(req.get('Cookie'));
+
     let goods_list = await taodb.getGoodsList();
     res.send(goods_list);
 });
 
 app.post('/goods/delete_goods', async function (req, res) {
     try {
-        let ret = await taodb.deleteGoods(req.body.good_id);
-        res.send({
-            success: ret.ok,
-            msg: ret.msg
-        })
+
+        console.log(req.cookies.token);
+
+        jwt.verify(req.cookies.token, 'abcdef', async function (err, user) {
+            if (err) {
+                res.send({
+                    success: false,
+                    msg: '您无权限删除'
+                });
+                return;
+            }
+
+            let ret = await taodb.deleteGoods(req.body.good_id);
+            res.send({
+                success: ret.ok,
+                msg: ret.msg
+            })
+        });
+
     } catch (err) {
         res.send({
             success: false,
@@ -30,11 +83,24 @@ app.post('/goods/publish_goods', async function (req, res) {
 
     console.log(req.body);
 
-    let ret = await taodb.addGoods(req.body);
+    jwt.verify(req.cookies.token, 'abcdef', async function (err, user) {
+        if (err) {
+            res.send({
+                success: false,
+                msg: '您无权限发布商品'
+            });
+            return;
+        }
 
-    res.send({
-        success: ret.ok
-    })
+        let ret = await taodb.addGoods(req.body);
+
+        res.send({
+            success: ret.ok
+        })
+    });
+
+
+
 });
 
 
@@ -58,9 +124,21 @@ app.post('/auth/login', async function (req, res) {
         // 对用户名进行加密处理
         let password = md5.update(req.body.password).digest('hex');
         if (password === userInfo.password) {
-            res.send({
-                login_ok: true
+
+            jwt.sign(userInfo, 'abcdef', function (err, token) {
+                if (err) {
+                    res.send({
+                        login_ok: true,
+                        msg: err.message
+                    });
+                    return;
+                }
+                res.cookie('token', token);
+                res.send({
+                    login_ok: true,
+                });
             });
+
             return;
         }
     }
