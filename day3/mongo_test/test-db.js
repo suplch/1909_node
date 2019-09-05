@@ -2,9 +2,7 @@ const mongodb = require('mongodb');  // 映入 mongodb 官方依赖模块   npm 
 const MongoClient = mongodb.MongoClient;  // 返回 mongodb 客户端对象
 const DB_URL = 'mongodb://localhost:27017';   // mongodb 数据库连接字符串
 
-
 let cacheClient;  // 设置一个 客户端连接 缓存对象
-
 function getClient() {
     return new Promise(function (resolve, reject) {
         if (cacheClient) { // 如果缓存对象 有效 直接返回
@@ -23,23 +21,24 @@ function getClient() {
         });
     });
 }
-
 async function getStudents(filter, pageNo, pageSize) {
     const client = await getClient();
     const testDB = client.db('test');
     return new Promise(function (resolve, reject) {
-        testDB.collection('c1909').find(filter).skip(pageNo * pageSize).limit(pageSize).toArray(function (err, result) {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(result);
-        });
+        testDB.collection('c1909')
+            .find(filter)
+            .skip(pageNo * pageSize)
+            .limit(pageSize)
+            .toArray(function (err, result) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(result);
+            });
     })
 }
-
 async function updateStudent(filter, setObj) {
-
     const client = await getClient();
     const testDB = client.db('test');
     return new Promise(function (resolve, reject) {
@@ -47,7 +46,6 @@ async function updateStudent(filter, setObj) {
             if (err) {
                 return reject(err)
             }
-
             resolve({
                 ok: true,
                 count: cmdResult.modifiedCount
@@ -57,7 +55,6 @@ async function updateStudent(filter, setObj) {
 }
 
 async function removeStudent(filter) {
-
     const client = await getClient();
     const testDB = client.db('test');
     return new Promise(function (resolve, reject) {
@@ -65,7 +62,6 @@ async function removeStudent(filter) {
             if (err) {
                 return reject(err)
             }
-
             resolve({
                 ok: true,
                 count: cmdResult.deletedCount
@@ -73,9 +69,7 @@ async function removeStudent(filter) {
         });
     });
 }
-
 async function insertStudent(student) {
-
     const client = await getClient();
     const testDB = client.db('test');
     return new Promise(function (resolve, reject) {
@@ -91,7 +85,6 @@ async function insertStudent(student) {
         })
     });
 }
-
 module.exports = {
     getStudents,
     updateStudent

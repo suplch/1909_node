@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品浏览</title>
+    <script src="./lib/axios.min.js"></script>
+</head>
+<body>
+<table border="1">
+    <thead>
+        <th>商品名称</th>
+        <th>图片</th>
+        <th>描述</th>
+        <th>价格</th>
+        <th>库存量</th>
+        <th>操作</th>
+    </thead>
+    <tbody id="tb"></tbody>
+</table>
+<script>
+
+    function deleteGoods(good_id) {
+        axios.post('/goods/delete_goods', {
+            good_id: good_id
+        }).then(function (result) {
+            if (result.data.success) {
+                location.reload();
+            } else {
+                alert('删除失败: ' + result.data.msg);
+            }
+        })
+    }
+
+    axios.get('/goods/get_goods_list').then(function (result) {
+        console.log(result.data);
+
+        let tbody = document.getElementById('tb');
+        for (let item of result.data) {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.name}</td>
+                <td> <img width="100" src="${item.picUrl}"/>  </td>
+                <td>${item.desc}</td>
+                <td>¥ ${item.price}元</td>
+                <td>${item.count}</td>
+                <td>
+                    <button onclick="deleteGoods('${item._id}')">删除</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+    }).catch(function (err) {
+        console.error(err);
+    })
+</script>
+</body>
+</html>

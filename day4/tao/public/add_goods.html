@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品浏览</title>
+    <script src="./lib/axios.min.js"></script>
+    
+    <script>
+        
+        function commitGoods(e) {
+            e.preventDefault();
+            const goods = {
+                name: document.getElementById('goodsName').value,
+                desc: document.getElementById('desc').value,
+                price: Number(document.getElementById('price').value),
+                count: Number(document.getElementById('count').value),
+                picUrl: document.getElementById('pic').value
+            };
+
+            axios.post('/goods/publish_goods', goods).then(function (result) {
+                console.log(result.data);
+            }).catch(function (err) {
+                console.error(err);
+            })
+        }
+    </script>
+</head>
+<body>
+    <form>
+        <div>
+            商品名称: <input id="goodsName" type="text" />
+        </div>
+        <div>
+            图片: <input id="pic" type="text" />
+        </div>
+        <div>
+            描述: <textarea id="desc"></textarea>
+        </div>
+        <div>
+            价格: <input id="price" type="number" />
+        </div>
+        <div>
+            库存量: <input id="count" type="number" />
+        </div>
+
+        <button id="commit">提交</button>
+    </form>
+
+    <script>
+        document.getElementById('commit').onclick = commitGoods;
+    </script>
+</body>
+</html>
