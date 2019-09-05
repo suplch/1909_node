@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./lib/axios.min.js"></script>
+</head>
+<body>
+    <fieldset>
+        <legend>注册</legend>
+        <div>
+            用户姓名: <input id="uname" type="text">
+        </div>
+        <div>
+            登录名: <input id="loginName" type="text">
+        </div>
+        <div>
+            密码: <input id="password" type="password">
+        </div>
+        <div>
+            确认密码: <input id="confirmPassword" type="password">
+        </div>
+        <div>
+            性别: <select id="sex">
+                        <option value="男">男</option>
+                        <option value="女">女</option>
+                    </select>
+        </div>
+        <button id="commit">提交</button>
+    </fieldset>
+    <div>
+
+    </div>
+
+    <script>
+        document.getElementById('commit').onclick = function () {
+            let password = document.getElementById('password').value;
+            let confirmPassword = document.getElementById('confirmPassword').value;
+            if (password !== confirmPassword) {
+                alert('密码不一致');
+                return;
+            }
+            let user = {
+                login_name: document.getElementById('loginName').value,
+                user_name: document.getElementById('uname').value,
+                password: password,
+                sex: document.getElementById('sex').value
+            };
+            axios.post('/auth/register', user).then(function (result) {
+                console.log(result.data);
+            }).catch(function (err) {
+                console.error(err);
+            });
+        }
+    </script>
+</body>
+</html>

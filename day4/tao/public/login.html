@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./lib/axios.min.js"></script>
+</head>
+<body>
+<fieldset>
+    <legend>登录</legend>
+    登录名: <input id="login_name" type="text"/>
+    密码: <input id="password" type="password" />
+    <button id="login">登录</button>
+</fieldset>
+<div>
+
+</div>
+
+<script>
+    document.getElementById('login').onclick = function () {
+
+        axios.post('/auth/login', {
+            login_name: document.getElementById('login_name').value,
+            password: document.getElementById('password').value
+        }).then(function (result) {
+            console.log(result.data);
+        }).catch(function (err) {
+            console.error(err);
+        });
+    }
+</script>
+</body>
+</html>

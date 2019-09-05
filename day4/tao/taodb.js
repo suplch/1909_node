@@ -73,8 +73,40 @@ async function deleteGoods(good_id) {
     });
 }
 
+async function registerUser(user) {
+    const db = await getDatabase();
+    return new Promise(function (resolve, reject) {
+        db.collection('users').insertOne(user, function (err, cmdResult) {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            resolve({
+                ok: cmdResult.insertedCount === 1
+            })
+        })
+    });
+}
+
+async function getUserByLoginName(login_name) {
+    const db = await getDatabase();
+    return new Promise(function (resolve, reject) {
+        db.collection('users').find({login_name: login_name}).toArray(function (err, cmdResult) {
+            if (err) {
+                reject(err);
+                return;
+            }
+
+            resolve(cmdResult[0])
+        })
+    });
+}
+
 module.exports = {
     getGoodsList,
     addGoods,
-    deleteGoods
+    deleteGoods,
+    registerUser,
+    getUserByLoginName
 };
