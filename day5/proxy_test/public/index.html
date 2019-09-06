@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./axios.min.js"></script>
+</head>
+<body>
+    音乐
+    <input type="number" value="0" onchange="changePage(this.value)" />
+    <table>
+        <thead>
+            <tr>
+                <th>专辑名称</th>
+                <th>作者</th>
+                <th>国家, 地区</th>
+                <th>海报</th>
+            </tr>
+        </thead>
+        <tbody id="tb"></tbody>
+    </table>
+<script>
+    function getMusic(pageNo) {
+        let offset = pageNo * 10
+        axios.get('/v1/restserver/ting?method=baidu.ting.billboard.billList&type=1&size=10&offset=' + offset).then(function (result) {
+            console.log(result.data);
+            let tbody = document.getElementById('tb');
+            tbody.innerHTML = '';
+            for (let song of result.data.song_list) {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                <td>${song.album_title}</td>
+                <td>${song.author}</td>
+                <td>${song.country}</td>
+                <td> <img src="${song.pic_big}" /> </td>
+            `;
+                tbody.appendChild(tr);
+            }
+        }).catch(function (err) {
+            console.error(err);
+        });
+    }
+    getMusic(0);
+    
+    function changePage(pageNo) {
+        getMusic(pageNo);
+    }
+</script>
+</body>
+</html>

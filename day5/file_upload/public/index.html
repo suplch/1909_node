@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+    <script>
+        function doUpload() {
+            $.ajax({
+                url: '/upload-single',
+                type: 'POST',
+                cache: false, //不必须
+                data: new FormData($('#uploadForm')[0]),
+                processData: false,//必须
+                contentType: false,//必须
+                success: function(data) {
+                    console.log(data);
+                    if (data.ret_code === '0') {
+                        alert('上传成功 文件路径: ' + data.filepath)
+                    }
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+    <!-- 必须将enctype设置 为 multipart/form-data -->
+    <form id="uploadForm" action="/upload-single" method="post" enctype="multipart/form-data">
+        <input type="file" name="logo" />
+        <input type="text" name="username" />
+        <input type="submit" value="表单提交">
+    </form>
+    <button onclick="doUpload()">ajax 提交</button>
+    <hr/>
+
+    <form action="/upload-test" method="post" enctype="multipart/form-data">
+        <input type="file" name="logo" />
+        <input type="text" name="username" />
+        <input type="text" name="age" />
+        <input type="submit" value="表单提交">
+    </form>
+</body>
+</html>

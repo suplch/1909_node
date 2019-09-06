@@ -12,7 +12,7 @@ app.use(cookieParser());  // 启用 cookie 解析 中间件
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-const whitelist = [
+const whitelist = [   // 定义白名单
     '/goods/get_goods_list',
     '/auth/register',
     '/auth/login'
@@ -20,7 +20,8 @@ const whitelist = [
 
 app.use(function (req, res, next) {
 
-    if (whitelist.indexOf(req.url) !== -1) { // 如果在白名单里的 服务 可以随意访问 不需要tokne 验证
+    if (whitelist.indexOf(req.url) !== -1) {
+        // 如果在白名单里的 服务 可以随意访问 不需要tokne 验证
         next();
     } else {
         jwt.verify(req.cookies.token, 'abcdef', async function (err, user) {
@@ -96,7 +97,6 @@ app.post('/auth/login', async function (req, res) {
         // 对用户名进行加密处理
         let password = md5.update(req.body.password).digest('hex');
         if (password === userInfo.password) {
-
             jwt.sign(userInfo, 'abcdef', function (err, token) {
                 if (err) {
                     res.send({
@@ -110,7 +110,6 @@ app.post('/auth/login', async function (req, res) {
                     login_ok: true,
                 });
             });
-
             return;
         }
     }
