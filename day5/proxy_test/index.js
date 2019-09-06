@@ -8,11 +8,15 @@ const proxy = require('http-proxy-middleware');
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/',
+    proxy({target: 'http://www.icbc.com.cn/icbc', changeOrigin: true}));
+
+//    https://www.jianshu.com/p/e9d43d15f6ba
 // 配置代理中间件
-app.use('/v1/restserver/ting',
-    proxy({target: 'http://tingapi.ting.baidu.com', changeOrigin: true}));
+// app.use('/v1/restserver/ting',
+//     proxy({target: 'http://tingapi.ting.baidu.com', changeOrigin: true}));
 
 
 // app.use(function (req, res, next) {
@@ -43,3 +47,4 @@ app.get('/api/baidu/', function (req, res) {
 
 
 app.listen(8000);
+

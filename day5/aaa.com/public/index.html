@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="axios.min.js"></script>
+</head>
+<body>
+aaa
+<script>
+
+
+    function get() {
+        axios.get('http://localhost:5000/api/getinfo').then(function (result) {
+            console.log(result.data);
+        }).catch(function (err) {
+            console.error(err);
+        })
+    }
+
+</script>
+
+<button onclick="get()">get b info</button>
+</body>
+</html>

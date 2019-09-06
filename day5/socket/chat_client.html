@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+    昵称: <input id="nickname" type="text">
+    <hr/>
+    <input id="msg" type="text"> <button onclick="send()">send</button>
+    <hr/>
+    <textarea id="msgList" style="width: 500px; height: 500px;"></textarea>
+    <script>
+
+        var socket;
+        window.onload = function () {
+            var msgarea = document.getElementById('msgList');
+
+            // 打开一个 websocket 连接  ws:// 表示 websocket 协议
+            socket = new WebSocket('ws://10.36.149.118:8080');
+
+            // 当连接打开是 触发
+            socket.onopen = function () {};
+            // 当收到 服务端的消息是触发
+            socket.onmessage = function (message) {
+                console.log('message', message.data);
+                let msgObj = JSON.parse(message.data);
+                msgarea.value += msgObj.nickname + ': ' + msgObj.msg + '\n';
+            };
+            // 当服务端 调用 close 方法 或者 服务关闭的时候 触发
+            socket.onclose = function () {
+                console.log('close')
+            }
+        };
+        function send() {
+            let nickname = document.getElementById('nickname').value;
+            let msg = document.getElementById('msg').value;
+
+            let obj = {
+                nickname: nickname,
+                msg: msg
+            }
+            socket.send(JSON.stringify(obj))
+        }
+
+    </script>
+</body>
+</html>
