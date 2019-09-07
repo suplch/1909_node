@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/hello.js"></script>
+  </head>
+  <body>
+    <a href="/about/info">关于</a>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+
+    <p><%= 1 + 1 %></p>
+
+    <%= person.name %>
+
+    <% if (person.age < 18) { %>
+      <p>未成年</p>
+    <% } else { %>
+      <p>成年</p>
+    <% } %>
+
+    <ul>
+      <% for (let hobby of person.hobbies) { %>
+        <li><%= hobby %></li>
+      <% } %>
+    </ul>
+
+    <table border="1">
+      <thead>
+        <tr>
+          <th>产品名称</th>
+          <th>价格</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let goods of goods_list) { %>
+        <tr>
+          <td><%= goods.name %></td>
+          <td><%= goods.price %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <%= greet('小张') %>
+
+
+    <%
+
+      function sum() {
+        let total = 0;
+        for (let i = 1; i <= 100; i++) {
+          total += i;
+        }
+        return total;
+      }
+    %>
+
+  <%= sum() %>
+
+  </body>
+  <script>
+    function aaa() {
+      
+    }
+    Welcome();
+  </script>
+</html>
